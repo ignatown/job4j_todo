@@ -7,6 +7,8 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.model.Item;
 import org.hibernate.Transaction;
+
+import javax.persistence.Query;
 import java.util.function.Function;
 
 import java.util.List;
@@ -67,11 +69,13 @@ public class HbnStore implements Store, AutoCloseable {
     }
 
     @Override
-    public void wasDone(Item item) {
+    public void wasDone(int id) {
         session(session -> {
-            item.setDone(true);
-            session.update(item);
-            return item;
+            int rsl = session.createQuery("update Item set done=:done where id=:id")
+                    .setParameter("id", id)
+                    .setParameter("done", true)
+                    .executeUpdate();
+            return rsl;
         });
     }
 

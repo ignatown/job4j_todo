@@ -12,7 +12,7 @@ public interface Store {
 
     void saveItem(Item item);
 
-    void wasDone(Item item);
+    void wasDone(int id);
 
     Item findById(int id);
 }

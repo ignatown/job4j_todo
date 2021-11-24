@@ -11,7 +11,7 @@ function loadOff() {
             }
             $('#itemsList ul').append(
                 `<li class="list-group-item">
-                     <input class="form-check-input me-1" type="checkbox"  name="check" value="${item.id}" aria-label="...">
+                     <input class="form-check-input me-1" type="radio"  name="check" value="${item.id}" aria-label="...">
                      ${item.description}</li>`);
         }
     }).fail(function (err) {
@@ -63,10 +63,10 @@ function newItem () {
 
 function wasDone() {
     let checks = document.getElementsByName("check");
-    let buff = [];
+    let buff;
     for (let i = 0; i < checks.length; i++) {
         if (checks[i].checked) {
-            buff.push(checks[i].getAttribute('value'));
+            buff = checks[i].getAttribute('value');
         }
     }
     let temp = JSON.stringify(buff);
@@ -74,7 +74,7 @@ function wasDone() {
         type: 'POST',
         url: 'http://localhost:8080/todo/close',
         data: {
-            values: temp
+            value: temp
         },
         dataType: 'json'
     }).fail(function (err) {

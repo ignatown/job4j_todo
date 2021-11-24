@@ -14,10 +14,7 @@ public class CloseServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
-        String[] buff = new Gson().fromJson(req.getParameter("values"), String[].class);
-        for (String elem : buff) {
-            Item item = HbnStore.instOf().findById(Integer.parseInt(elem));
-            HbnStore.instOf().wasDone(item);
-        }
+        String id = new Gson().fromJson(req.getParameter("value"), String.class);
+        HbnStore.instOf().wasDone(Integer.parseInt(id));
     }
 }
