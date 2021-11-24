@@ -6,6 +6,8 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.model.Item;
+import org.hibernate.Transaction;
+import java.util.function.Function;
 
 import java.util.List;
 
@@ -21,6 +23,21 @@ public class HbnStore implements Store, AutoCloseable {
         private static final Store INST = new HbnStore();
     }
 
+    private <T> T session(final Function<Session, T> command) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
+        try {
+            T rsl = command.apply(session);
+            tx.commit();
+            return rsl;
+        } catch (final Exception e) {
+            session.getTransaction().rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
     public static Store instOf() {
         return Lazy.INST;
     }
@@ -32,50 +49,34 @@ public class HbnStore implements Store, AutoCloseable {
 
     @Override
     public List<Item> findAllOffItems() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Item> rsl = session.createQuery("from Item where done = false").list();
-        session.getTransaction().commit();
-        session.close();
-        return rsl;
+        return this.session(
+                session -> session.createQuery("from Item where done=false").list()
+        );
     }
 
     @Override
     public List<Item> findReallyAllItems() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Item> rsl = session.createQuery("from Item").list();
-        session.getTransaction().commit();
-        session.close();
-        return rsl;
+        return this.session(
+                session -> session.createQuery("from Item").list()
+        );
     }
 
     @Override
     public void saveItem(Item item) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.save(item);
-        session.getTransaction().commit();
-        session.close();
+        session(session -> session.save(item));
     }
 
     @Override
     public void wasDone(Item item) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        item.setDone(true);
-        session.update(item);
-        session.getTransaction().commit();
-        session.close();
+        session(session -> {
+            item.setDone(true);
+            session.update(item);
+            return item;
+        });
     }
 
     @Override
     public Item findById(int id) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        Item rsl = session.get(Item.class, id);
-        session.getTransaction().commit();
-        session.close();
-        return rsl;
+        return session(session -> session.get(Item.class, id));
     }
 }
