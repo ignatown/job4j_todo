@@ -7,6 +7,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.model.Item;
 import org.hibernate.Transaction;
+import ru.job4j.model.User;
 
 import javax.persistence.Query;
 import java.util.function.Function;
@@ -50,16 +51,32 @@ public class HbnStore implements Store, AutoCloseable {
     }
 
     @Override
-    public List<Item> findAllOffItems() {
+    public User findUserByEmail(String email) {
+        return (User) session(session -> session.createQuery("from User where email=:email")
+                .setParameter("email", email)
+                .uniqueResult());
+    }
+
+    @Override
+    public void saveUser(User user) {
+        session(session -> session.save(user));
+    }
+
+    @Override
+    public List<Item> findAllOffItems(int userId) {
         return this.session(
-                session -> session.createQuery("from Item where done=false").list()
+                session -> session.createQuery("from Item where done=false and user_id=:id")
+                        .setParameter("id", userId)
+                        .list()
         );
     }
 
     @Override
-    public List<Item> findReallyAllItems() {
+    public List<Item> findReallyAllItems(int userId) {
         return this.session(
-                session -> session.createQuery("from Item").list()
+                session -> session.createQuery("from Item where user_id=:id")
+                        .setParameter("id", userId)
+                        .list()
         );
     }
 
@@ -71,11 +88,10 @@ public class HbnStore implements Store, AutoCloseable {
     @Override
     public void wasDone(int id) {
         session(session -> {
-            int rsl = session.createQuery("update Item set done=:done where id=:id")
+            return session.createQuery("update Item set done=:done where id=:id")
                     .setParameter("id", id)
                     .setParameter("done", true)
                     .executeUpdate();
-            return rsl;
         });
     }
 

@@ -13,13 +13,25 @@ public class Item {
     private String description;
     private Timestamp created;
     private boolean done;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public static Item init(String description, Timestamp created, boolean done) {
+    public static Item init(String description, Timestamp created, boolean done, User user) {
         Item item = new Item();
         item.description = description;
         item.created = created;
         item.done = done;
+        item.user = user;
         return item;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int getId() {
