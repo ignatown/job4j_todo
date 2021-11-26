@@ -16,26 +16,21 @@ public class HbmRun {
             Session session = sf.openSession();
             session.beginTransaction();
 
-            Car one = Car.of("2101");
-            Car two = Car.of("2102");
-            Car three = Car.of("2103");
-            Car four = Car.of("2104");
-            Car five = Car.of("2105");
+            Book oneBook = Book.of("Book 1");
+            Book twoBook = Book.of("Book 2");
 
-            session.save(one);
-            session.save(two);
-            session.save(three);
-            session.save(four);
-            session.save(five);
+            Author oneAuthor = Author.of("Author 1");
+            oneAuthor.getBooks().add(oneBook);
 
-            Model vaz = Model.of("VAZ");
-            vaz.addCar(session.load(Car.class, 1));
-            vaz.addCar(session.load(Car.class, 2));
-            vaz.addCar(session.load(Car.class, 3));
-            vaz.addCar(session.load(Car.class, 4));
-            vaz.addCar(session.load(Car.class, 5));
+            Author twoAuthor = Author.of("Author 2");
+            twoAuthor.getBooks().add(oneBook);
+            twoAuthor.getBooks().add(twoBook);
 
-            session.save(vaz);
+            session.persist(oneAuthor);
+            session.persist(twoAuthor);
+
+            Author removeAuthor = session.get(Author.class, 1);
+            session.remove(removeAuthor);
 
             session.getTransaction().commit();
             session.close();

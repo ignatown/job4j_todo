@@ -21,5 +21,7 @@
         <mapping class="ru.job4j.model.User"/>
         <mapping class="many.Car"/>
         <mapping class="many.Model"/>
+        <mapping class="many.Author"/>
+        <mapping class="many.Book"/>
     </session-factory>
 </hibernate-configuration>
