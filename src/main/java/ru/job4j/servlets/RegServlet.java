@@ -19,10 +19,12 @@ public class RegServlet extends HttpServlet {
             HbnStore.instOf().saveUser(new User(req.getParameter("name"),
                     email,
                     req.getParameter("password")));
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
         } else {
+            req.setAttribute("error", "Пользователь с введенным e-mail уже зарегистрирован.");
             req.getRequestDispatcher("login.jsp").forward(req, resp);
         }
-        resp.sendRedirect(req.getContextPath() + "/login.jsp");
+
     }
 
     @Override

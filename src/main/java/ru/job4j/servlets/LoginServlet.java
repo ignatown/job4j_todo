@@ -20,6 +20,7 @@ public class LoginServlet extends HttpServlet {
             sc.setAttribute("user", user);
             resp.sendRedirect(req.getContextPath() + "/task");
         } else {
+            req.setAttribute("error", "Неверно введен e-mail или пароль.");
             req.getRequestDispatcher("login.jsp").forward(req, resp);
         }
     }
