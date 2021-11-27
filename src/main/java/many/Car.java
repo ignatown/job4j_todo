@@ -10,10 +10,14 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "model_id")
+    private Model model;
 
-    public static Car of(String name) {
+    public static Car of(String name, Model model) {
         Car car = new Car();
         car.name = name;
+        car.model = model;
         return car;
     }
 
@@ -48,5 +52,14 @@ public class Car {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", model=" + model +
+                '}';
     }
 }

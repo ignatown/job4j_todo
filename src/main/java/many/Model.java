@@ -12,7 +12,7 @@ public class Model {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "model")
     private List<Car> cars = new ArrayList<>();
 
     public static Model of(String name) {
@@ -64,5 +64,12 @@ public class Model {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Model{" +
+                "id=" + id +
+                ", name=" + name;
     }
 }
