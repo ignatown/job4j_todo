@@ -18,7 +18,7 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Category> categoryList = new ArrayList<>();
 
     public static Item init(String description, Timestamp created, boolean done, User user) {

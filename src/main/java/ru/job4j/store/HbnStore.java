@@ -66,7 +66,7 @@ public class HbnStore implements Store, AutoCloseable {
     @Override
     public List<Item> findAllOffItems(int userId) {
         return this.session(
-                session -> session.createQuery("from Item where done=false and user_id=:id")
+                session -> session.createQuery("select distinct i from Item i join fetch i.categoryList where i.done=false and user_id=:id")
                         .setParameter("id", userId)
                         .list()
         );
@@ -75,7 +75,7 @@ public class HbnStore implements Store, AutoCloseable {
     @Override
     public List<Item> findReallyAllItems(int userId) {
         return this.session(
-                session -> session.createQuery("from Item where user_id=:id")
+                session -> session.createQuery("select distinct i from Item i join fetch i.categoryList where user_id=:id")
                         .setParameter("id", userId)
                         .list()
         );
