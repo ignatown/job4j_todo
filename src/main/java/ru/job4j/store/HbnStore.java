@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.job4j.model.Category;
 import ru.job4j.model.Item;
 import org.hibernate.Transaction;
 import ru.job4j.model.User;
@@ -81,8 +82,14 @@ public class HbnStore implements Store, AutoCloseable {
     }
 
     @Override
-    public void saveItem(Item item) {
-        session(session -> session.save(item));
+    public void saveItem(Item item, String[] categoryIds) {
+        session(session -> {
+            for (String id: categoryIds) {
+                item.addCategory(session.get(Category.class, Integer.parseInt(id)));
+            }
+            session.save(item);
+            return true;
+        });
     }
 
     @Override
@@ -93,6 +100,13 @@ public class HbnStore implements Store, AutoCloseable {
                     .setParameter("done", true)
                     .executeUpdate();
         });
+    }
+
+    @Override
+    public List<Category> findAllCategory() {
+        return session(session -> session.createQuery("from ru.job4j.model.Category")
+                .list()
+        );
     }
 
     @Override

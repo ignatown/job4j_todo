@@ -45,9 +45,15 @@
     <form class="row g-3" action="<%=request.getContextPath()%>/task" method="post">
         <div class="mb-3">
             <label for="addTask" class="form-label">Введите текст новой задачи:</label>
-            <div style="text-align: center;">
             <textarea class="form-control" name="description" id="addTask" rows="3" ></textarea>
-            </div>
+            <label for="categoryIds" class="form-label">Выберите категорию задачи:</label>
+                <select class="form-select" name="categoryIds" id="categoryIds" multiple>
+                    <c:forEach items="${allCategory}" var="categories">
+                        <option value='<c:out value="${categories.id}"/>'>
+                            <c:out value="${categories.name}" />
+                        </option>
+                    </c:forEach>
+                </select>
             <button type="submit" class="btn btn-primary mt-3" onclick="return validate()">Добавить задачу</button>
         </div>
     </form>
@@ -60,8 +66,12 @@
         <ul class="list-group" id="itemsListUl">
             <c:forEach items="${tasks}" var="task">
                 <li class="list-group-item">
-                    <input class="form-check-input me-1" type="radio"  name="check" value='<c:out value="${task.id}"/>' <c:if test="${task.done == true}">checked</c:if> >
+                    <input class="form-check-input me-1" type="radio"  name="check" value='<c:out value="${task.id}"/>'
+                           <c:if test="${task.done == true}">checked</c:if> >
                     <i><c:out value="${user.name}"/>:</i>  <c:out value="${task.description}"/>
+                    <c:forEach items="${task.categoryList}" var="ct">
+                      [<c:out value="${ct.name}"/>]
+                    </c:forEach>
                 </li>
             </c:forEach>
         </ul>

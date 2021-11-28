@@ -19,6 +19,7 @@
 
         <mapping class="ru.job4j.model.Item"/>
         <mapping class="ru.job4j.model.User"/>
+        <mapping class="ru.job4j.model.Category" />
         <mapping class="many.Car"/>
         <mapping class="many.Model"/>
         <mapping class="many.Author"/>
