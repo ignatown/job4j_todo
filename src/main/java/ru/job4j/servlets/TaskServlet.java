@@ -9,12 +9,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TaskServlet extends HttpServlet {
 
@@ -41,7 +38,7 @@ public class TaskServlet extends HttpServlet {
         HbnStore.instOf().saveItem(
                 Item.init(
                         req.getParameter("description"),
-                        new Timestamp(System.currentTimeMillis()),
+                        new Date(System.currentTimeMillis()),
                         false,
                         ((User) req.getSession().getAttribute("user"))
                 ), categoryIds
