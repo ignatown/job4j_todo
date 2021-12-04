@@ -22,29 +22,24 @@ public class HqlHbmRun {
             session.save(Candidate.of("Sergey", 5, 200000));
             session.save(Candidate.of("Pavel", 2, 150000));
 
-            //Все
-            List<Candidate> candidateList = session.createQuery("from Candidate ").list();
-            System.out.println(candidateList);
+            List<Candidate> allCandidates = session.createQuery("from Candidate ").list();
+            System.out.println(allCandidates);
 
-            //По id
             Candidate byId = (Candidate) session.createQuery("from Candidate where id=:id")
                     .setParameter("id", 1)
                     .uniqueResult();
             System.out.println(byId);
 
-            //По имени
             Candidate byName = (Candidate) session.createQuery("from Candidate where name=:name")
                     .setParameter("name", "Pavel")
                     .uniqueResult();
             System.out.println(byName);
 
-            //Обновление
             session.createQuery("update Candidate set experience=:experience where id=:id")
                     .setParameter("experience", 3)
                     .setParameter("id", 1)
                     .executeUpdate();
 
-            //Удаление
             session.createQuery("delete from Candidate where id=:id")
                     .setParameter("id", 2)
                     .executeUpdate();
