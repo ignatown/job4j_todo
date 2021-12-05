@@ -11,13 +11,24 @@ public class Candidate {
     private String name;
     private int experience;
     private int salary;
+    @OneToOne(fetch = FetchType.LAZY)
+    private BaseOfVacancies baseOfVacancies;
 
-    public static Candidate of(String name, int experience, int salary) {
+    public static Candidate of(String name, int experience, int salary, BaseOfVacancies baseOfVacancies) {
         Candidate candidate = new Candidate();
         candidate.name = name;
         candidate.experience = experience;
         candidate.salary = salary;
+        candidate.baseOfVacancies = baseOfVacancies;
         return candidate;
+    }
+
+    public BaseOfVacancies getBaseOfVacancies() {
+        return baseOfVacancies;
+    }
+
+    public void setBaseOfVacancies(BaseOfVacancies baseOfVacancies) {
+        this.baseOfVacancies = baseOfVacancies;
     }
 
     public int getId() {
