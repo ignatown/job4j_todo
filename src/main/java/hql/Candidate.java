@@ -14,12 +14,11 @@ public class Candidate {
     @OneToOne(fetch = FetchType.LAZY)
     private BaseOfVacancies baseOfVacancies;
 
-    public static Candidate of(String name, int experience, int salary, BaseOfVacancies baseOfVacancies) {
+    public static Candidate of(String name, int experience, int salary) {
         Candidate candidate = new Candidate();
         candidate.name = name;
         candidate.experience = experience;
         candidate.salary = salary;
-        candidate.baseOfVacancies = baseOfVacancies;
         return candidate;
     }
 
