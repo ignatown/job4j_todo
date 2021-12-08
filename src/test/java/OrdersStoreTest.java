@@ -1,6 +1,7 @@
 import integration.Order;
 import integration.OrdersStore;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +36,11 @@ public class OrdersStoreTest {
         pool.getConnection().prepareStatement(builder.toString()).executeUpdate();
     }
 
+    @After
+    public void drop() throws SQLException {
+        pool.getConnection().prepareStatement("DROP TABLE orders").executeUpdate();
+    }
+
     @Test
     public void whenSaveOrderAndFindAllOneRowWithDescription() throws SQLException {
         OrdersStore store = new OrdersStore(pool);
@@ -43,7 +49,6 @@ public class OrdersStoreTest {
         assertThat(all.size(), is(1));
         assertThat(all.get(0).getDescription(), is("description1"));
         assertThat(all.get(0).getId(), is(1));
-        pool.getConnection().prepareStatement("DROP TABLE orders").executeUpdate();
     }
 
     @Test
@@ -53,7 +58,6 @@ public class OrdersStoreTest {
         assertThat(store.findById(1).getName(), is("name1"));
         store.update(Order.of("new name", "new desc"), 1);
         assertThat(store.findById(1).getName(), is("new name"));
-        pool.getConnection().prepareStatement("DROP TABLE orders").executeUpdate();
     }
 
     @Test
@@ -62,7 +66,6 @@ public class OrdersStoreTest {
         Order order = Order.of("name1", "description1");
         store.save(order);
         assertThat(store.findByName("name1"), is(order));
-        pool.getConnection().prepareStatement("DROP TABLE orders").executeUpdate();
     }
 
     @Test
@@ -73,6 +76,5 @@ public class OrdersStoreTest {
         store.save(order1);
         store.save(order2);
         assertThat(store.findById(2), is(order2));
-        pool.getConnection().prepareStatement("DROP TABLE orders").executeUpdate();
     }
 }
